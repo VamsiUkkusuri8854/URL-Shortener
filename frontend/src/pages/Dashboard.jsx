@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { Link2, Copy, Trash2, Edit2, BarChart3, QrCode, Download, Search, Check } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { API_BASE_URL, BASE_URL } from '../config';
 
 export default function Dashboard() {
   const [urls, setUrls] = useState([]);
@@ -22,7 +23,7 @@ export default function Dashboard() {
 
   const fetchUrls = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/urls');
+      const res = await axios.get(`${API_BASE_URL}/urls`);
       setUrls(res.data);
     } catch (err) {
       console.error(err);
@@ -36,7 +37,7 @@ export default function Dashboard() {
   const confirmDelete = async () => {
     if (!urlToDelete) return;
     try {
-      await axios.delete(`http://localhost:8080/api/urls/${urlToDelete}`);
+      await axios.delete(`${API_BASE_URL}/urls/${urlToDelete}`);
       fetchUrls();
       setUrlToDelete(null);
       setShowToast(true);
@@ -48,7 +49,7 @@ export default function Dashboard() {
   };
 
   const handleCopy = (shortCode) => {
-    navigator.clipboard.writeText(`http://localhost:8080/${shortCode}`);
+    navigator.clipboard.writeText(`${BASE_URL}/${shortCode}`);
     setCopiedId(shortCode);
     setTimeout(() => setCopiedId(null), 5000);
   };
@@ -61,7 +62,7 @@ export default function Dashboard() {
   const openAnalyticsModal = async (url) => {
     setSelectedUrl(url);
     try {
-      const res = await axios.get(`http://localhost:8080/api/urls/${url.id}/analytics`);
+      const res = await axios.get(`${API_BASE_URL}/urls/${url.id}/analytics`);
       setAnalytics(res.data);
       setShowAnalyticsModal(true);
     } catch (err) {
@@ -137,8 +138,8 @@ export default function Dashboard() {
                     </div>
                   </td>
                   <td className="p-4">
-                    <a href={`http://localhost:8080/${u.shortCode}`} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline font-medium">
-                      {u.shortCode}
+                    <a href={`${BASE_URL}/${u.shortCode}`} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline font-medium">
+                      {BASE_URL.replace(/^https?:\/\//, '')}/{u.shortCode}
                     </a>
                   </td>
                   <td className="p-4 font-medium">{u.clickCount}</td>
@@ -178,7 +179,7 @@ export default function Dashboard() {
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white dark:bg-black p-6 rounded-2xl shadow-2xl max-w-sm w-full border border-gray-200 dark:border-gray-800">
             <h3 className="text-xl font-bold mb-4 text-center">QR Code</h3>
             <div className="flex justify-center mb-6 bg-white p-4 rounded-xl">
-              <QRCodeSVG id="qr-gen" value={`http://localhost:8080/${selectedUrl.shortCode}`} size={200} />
+              <QRCodeSVG id="qr-gen" value={`${BASE_URL}/${selectedUrl.shortCode}`} size={200} />
             </div>
             <div className="flex gap-4">
               <button onClick={() => setShowQrModal(false)} className="flex-1 py-2 rounded-xl bg-gray-200 dark:bg-gray-800 hover:opacity-80 transition">

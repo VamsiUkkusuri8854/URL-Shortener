@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { BarChart2, Search, Users, Globe, Monitor } from 'lucide-react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, CartesianGrid } from 'recharts';
+import { API_BASE_URL } from '../config';
 
 export default function AnalyticsPage() {
   const [shortCode, setShortCode] = useState('');
@@ -26,7 +27,7 @@ export default function AnalyticsPage() {
       }
       query = query.toLowerCase();
 
-      const allUrlsRes = await axios.get('http://localhost:8080/api/urls');
+      const allUrlsRes = await axios.get(`${API_BASE_URL}/urls`);
       const urlRecord = allUrlsRes.data.find(u => 
         (u.shortCode && u.shortCode.toLowerCase() === query) || 
         (u.customAlias && u.customAlias.toLowerCase() === query)
@@ -37,7 +38,7 @@ export default function AnalyticsPage() {
       }
 
       // Then fetch its analytics
-      const analyticsRes = await axios.get(`http://localhost:8080/api/urls/${urlRecord.id}/analytics`);
+      const analyticsRes = await axios.get(`${API_BASE_URL}/urls/${urlRecord.id}/analytics`);
       
       setData({
         url: urlRecord,

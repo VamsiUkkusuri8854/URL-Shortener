@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Link2, BarChart2, QrCode, ArrowRight, CheckCircle2, Copy, Check } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL, BASE_URL } from '../config';
 
 export default function LandingPage() {
   const [url, setUrl] = useState('');
@@ -24,11 +25,11 @@ export default function LandingPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://localhost:8080/api/urls/create', {
+      const response = await axios.post(`${API_BASE_URL}/urls/create`, {
         originalUrl: url,
         customAlias: alias || null
       });
-      setShortUrl(`http://localhost:8080/${response.data.shortCode}`);
+      setShortUrl(`${BASE_URL}/${response.data.shortCode}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to shorten URL');
     } finally {
