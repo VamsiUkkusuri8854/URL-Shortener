@@ -1,0 +1,9 @@
+backend/target/
+backend/backend_log.txt
+frontend/dist/
+frontend/node_modules/
+.idea/
+.vscode/
+*.class
+*.log
+.DS_Store
